@@ -193,8 +193,12 @@ def transformacaoGeometrica(tx, ty, tz, sx, sy, sz, rx, ry, rz):
 
 def inicializaRenderizacao():
     global Window, Shader_programm, Vao, WIDTH, HEIGHT
+    tini = glfw.get_time() #variável para controlar o tempo de execução do programa
 
     while not glfw.window_should_close(Window):
+        tfim = glfw.get_time()
+        tini = tfim
+        
         glClear(GL_COLOR_BUFFER_BIT)
         glClearColor(0.6, 0.85, 0.92, 1.0)
         glViewport(0, 0, WIDTH, HEIGHT)
@@ -241,8 +245,13 @@ def inicializaRenderizacao():
         #desenha sol
         glBindVertexArray(Vao_quadrado)
         trocaCor(1.0, 1.0, 0.0, 1.0) #amarelo
-        transformacaoGeometrica(3, 3, 0, 0.2, 0.25, 1, 0, 0, 0)
-        glDrawArrays(GL_TRIANGLES, 0, 6)
+        anguloSol = tini*100%360
+        print(anguloSol)
+        if anguloSol < 150:
+            transformacaoGeometrica(3.5, 1, 0, 0.2, 0.25, 1, 0, 0, anguloSol)
+            glDrawArrays(GL_TRIANGLES, 0, 6)
+        else:
+            glClearColor(0.0, 0.0, 0.0, 1.0) #preto
 
         glfw.poll_events() #recebe eventos de mouse e teclado
 
