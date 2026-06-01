@@ -198,9 +198,16 @@ def inicializaRenderizacao():
     while not glfw.window_should_close(Window):
         tfim = glfw.get_time()
         tini = tfim
-        
+
+        anguloSol = tini*100%360
+        fator = (np.sin(np.radians(anguloSol)) +1)/2
+
+        r = fator * (0.6)
+        g = fator * (0.85)
+        b = 0.15 + fator * (0.92 - 0.02)
+
+        glClearColor(r, g, b, 1.0)
         glClear(GL_COLOR_BUFFER_BIT)
-        glClearColor(0.6, 0.85, 0.92, 1.0)
         glViewport(0, 0, WIDTH, HEIGHT)
 
         glUseProgram(Shader_programm) #ativa o shader
@@ -210,6 +217,15 @@ def inicializaRenderizacao():
         trocaCor(55/255, 125/255, 34/255, 1.0)
         transformacaoGeometrica(0,-0.5,0,2,1,1,0,0,0)
         glDrawArrays(GL_TRIANGLES, 0, 6)
+
+        #desenha sol
+        glBindVertexArray(Vao_quadrado)
+        trocaCor(1.0, 1.0, 0.0, 1.0) #amarelo
+        if anguloSol < 150:
+            transformacaoGeometrica(3.5, 1, 0, 0.2, 0.25, 1, 0, 0, anguloSol)
+            glDrawArrays(GL_TRIANGLES, 0, 6)
+        else:
+            glClearColor(0.0, 0.0, 0.0, 1.0) #preto
 
         #desenha casa
         trocaCor(1.0, 1.0, 1.0, 1.0) #branco
@@ -241,17 +257,6 @@ def inicializaRenderizacao():
         trocaCor(0.0, 0.5, 0.0, 1.0) #verde
         transformacaoGeometrica(1.4, 0.7, 0, 0.5, 0.5, 1, 0, 0, 0)
         glDrawArrays(GL_TRIANGLES, 0, 3)
-
-        #desenha sol
-        glBindVertexArray(Vao_quadrado)
-        trocaCor(1.0, 1.0, 0.0, 1.0) #amarelo
-        anguloSol = tini*100%360
-        print(anguloSol)
-        if anguloSol < 150:
-            transformacaoGeometrica(3.5, 1, 0, 0.2, 0.25, 1, 0, 0, anguloSol)
-            glDrawArrays(GL_TRIANGLES, 0, 6)
-        else:
-            glClearColor(0.0, 0.0, 0.0, 1.0) #preto
 
         glfw.poll_events() #recebe eventos de mouse e teclado
 
